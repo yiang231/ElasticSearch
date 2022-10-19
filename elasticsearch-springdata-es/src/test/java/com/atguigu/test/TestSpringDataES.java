@@ -21,4 +21,12 @@ public class TestSpringDataES {
 		elasticsearchRestTemplate.createIndex(Item.class);//创建索引
 		elasticsearchRestTemplate.putMapping(Item.class);//添加映射信息
 	}
+
+	@Test
+	public void testAdd() {//添加一条文档
+		Item item = new Item(1L, "小米手机7", " 手机", "小米", 3499.00, "http://image.leyou.com/13123.jpg");
+		this.elasticsearchRestTemplate.save(item); //save update saveAll
+		//this.elasticsearchRestTemplate.delete()
+		//this.elasticsearchRestTemplate.get();
+	}
 }
