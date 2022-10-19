@@ -54,4 +54,21 @@ public class TestItemDao {
 		this.itemDao.deleteById(1L);
 	}
 
+	@Test
+	public void testFindByPriceBetween() {
+		List<Item> list = itemDao.findByPriceBetween(2500.0, 5000.0);
+		list.forEach(System.out::println);
+	}
+
+	@Test
+	public void testFindByPriceAndTitle() {
+		List<Item> list = itemDao.findByPriceAndTitle(3699.0, "小米手机");
+		list.forEach(System.out::println);
+	}
+
+	@Test
+	public void testFindByPriceOrTitle() {
+		List<Item> list = itemDao.findByPriceOrTitle(3699.0, "手机");
+		list.forEach(System.out::println);
+	}
 }
