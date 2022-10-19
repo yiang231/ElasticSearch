@@ -7,6 +7,8 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.MatchAllQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -36,6 +38,39 @@ public class TestQuery {
 
 		searchSourceBuilder.from(0);
 		searchSourceBuilder.size(10);//默认值
+		//执行查询请求并且得到响应
+		SearchResponse response = client.search(request, RequestOptions.DEFAULT);
+		//将结果封装到List<Goods>中
+		List<Goods> goodsArrayList = new ArrayList<>();
+		SearchHits hits = response.getHits();
+		long totalHits = hits.getTotalHits().value;
+		System.out.println("totalHits = " + totalHits);//ES中文档数量，goods索引的总数量
+
+		SearchHit[] hitsArr = hits.getHits();
+		for (SearchHit hit : hitsArr) {
+			//获取文档字符串
+			String hitSourceAsString = hit.getSourceAsString();
+			//将文档字符串转换为goods对象
+			Goods goods = JSON.parseObject(hitSourceAsString, Goods.class);
+			goodsArrayList.add(goods);
+		}
+		//遍历List<Goods>输出
+		goodsArrayList.forEach(System.out::println);
+		System.out.println(goodsArrayList.size());//Java中goodList集合
+	}
+
+	@Test
+	public void testMatch() throws IOException {
+		//创建查询的请求
+		SearchRequest request = new SearchRequest("goods");
+		//分页
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		MatchQueryBuilder queryBuilder = QueryBuilders.matchQuery("title", "华为手机").operator(Operator.AND);
+		searchSourceBuilder.query(queryBuilder);
+		request.source(searchSourceBuilder);
+
+		searchSourceBuilder.from(0);
+		searchSourceBuilder.size(20);//默认值
 		//执行查询请求并且得到响应
 		SearchResponse response = client.search(request, RequestOptions.DEFAULT);
 		//将结果封装到List<Goods>中
