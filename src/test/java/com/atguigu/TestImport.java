@@ -17,6 +17,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/*
+把MySQL的es数据库中的goods表的所有的记录
+转换为（导入到）
+ES中，变为指定索引goods的指定的文档
+
+然后不再使用SQL语句对MySQL进行操作，而是使用DSL对ES进行操作
+好处
+1.实时
+2.分词
+3.相关性
+ */
 @SpringBootTest
 public class TestImport {
 	@Autowired
